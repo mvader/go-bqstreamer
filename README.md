@@ -58,8 +58,8 @@ $ go test -v -cover
 
 # Run integration tests. This requires an active project, dataset and pem key.
 # Make sure you edit the project, dataset, and table name in the .sh file.
-$ ./integration_test.sh
-$ ./multi_integration_test.sh
+$ ./integration_test.sh PROJECT_NAME
+$ ./multi_integration_test.sh PROJECT_NAME
 ```
 
 

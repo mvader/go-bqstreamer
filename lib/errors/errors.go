@@ -1,6 +1,5 @@
-// Here be various error types sent by the streamer.
-
-package bqstreamer
+// Package errors provides various error types.
+package errors
 
 import (
 	"encoding/json"
@@ -33,7 +32,7 @@ func (err *TooManyFailedInsertRetriesError) Error() string {
 		"")
 }
 
-func newTooManyFailedInsertRetriesError(
+func NewTooManyFailedInsertRetriesError(
 	numFailedRetries int,
 	projectID, datasetID, tableID string) *TooManyFailedInsertRetriesError {
 
@@ -71,7 +70,7 @@ func (err *AllRowsRejectedError) Error() string {
 		"")
 }
 
-func newAllRowsRejectedError(projectID, datasetID, tableID string) *AllRowsRejectedError {
+func NewAllRowsRejectedError(projectID, datasetID, tableID string) *AllRowsRejectedError {
 	return &AllRowsRejectedError{
 		projectID: projectID,
 		datasetID: datasetID,
@@ -113,7 +112,7 @@ func (err *RowError) Error() string {
 		"")
 }
 
-func newRowError(
+func NewRowError(
 	bqError bigquery.ErrorProto,
 	index int64,
 	projectID, datasetID, tableID string,
