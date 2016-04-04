@@ -43,6 +43,8 @@ type Streamer struct {
 	// Shutdown channel to stop Start() execution.
 	stopChannel chan struct{}
 
+	done chan struct{}
+
 	// Errors are reported to this channel.
 	Errors chan error
 
@@ -91,6 +93,7 @@ func NewStreamer(
 		MaxRetryInsert:   maxRetryInsert,
 		stopChannel:      make(chan struct{}),
 		Errors:           make(chan error, errorBufferSize),
+		done:             make(chan struct{}),
 	}
 
 	err = validator.Validate(b)
@@ -123,6 +126,7 @@ func (b *Streamer) start() {
 		select {
 		case <-b.stopChannel:
 			b.flush()
+			b.done <- struct{}{}
 			return
 		case <-time.After(b.MaxDelay):
 		case r := <-b.rowChannel:
@@ -143,6 +147,7 @@ func (b *Streamer) start() {
 // stopStreamer sends a stop message to stop channel, causing Start() infinite loop to stop.
 func (b *Streamer) stop() {
 	b.stopChannel <- struct{}{}
+	<-b.done
 }
 
 // flushAll streams all queued rows to BigQuery and resets rows queue by
